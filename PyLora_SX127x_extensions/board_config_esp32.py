@@ -3,7 +3,7 @@ import math
 
 from machine import Pin, SPI, reset
 import time
-from board_config import BOARD
+from PyLora_SX127x_extensions.board_config import BOARD
 
 
 class BOARD_ESP32(BOARD):
@@ -75,7 +75,7 @@ class BOARD_ESP32(BOARD):
             self.spi.init()
 
         except Exception as e:
-            print(e)
+            #print(e)
             if self.spi:
                 self.spi.deinit()
                 self.spi = None
@@ -114,7 +114,7 @@ class BOARD_ESP32(BOARD):
                 while not self.pin_raised:
                     pass
             else:
-                if value is not None or value is not 0:
+                if value:
                     chanel = self.settimeout(value=value, callback=self.CB_DIO0)
                 else:
                     chanel = self.dio0_pin.set_rising_handler(self.esp32_cb)
@@ -135,7 +135,7 @@ class BOARD_ESP32(BOARD):
         self.dio0_pin.detach_irq_trigger()
         chanel = None
         timer = value*1000
-        print('tt', timer)
+        #print('tt', timer)
         while timer != 0:
             if self.dio0_pin.value() == 1:
                 chanel = 1

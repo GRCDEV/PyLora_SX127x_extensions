@@ -1,7 +1,6 @@
 """ Defines the SX127x class and a few utility functions. """
-
 import sys
-from constants import *
+from PyLora_SX127x_extensions.constants import *
 
 
 ################################################## Some utility functions ##############################################
@@ -141,9 +140,8 @@ class LoRa:
 
     def on_tx_done(self):
         self.set_mode(MODE.STDBY)
-        print('fifo ', self.get_fifo_rx_current_addr())
+        #print('fifo ', self.get_fifo_rx_current_addr())
         self.clear_irq_flags(TxDone=1)  # clear txdone IRQ flag
-
 
     def on_cad_done(self):
         pass

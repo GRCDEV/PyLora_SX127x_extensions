@@ -1,15 +1,17 @@
 import os
-from constants import *
+from PyLora_SX127x_extensions.constants import *
 try:
     machine = os.uname().machine
 except Exception:
     machine = os.name
-
+import gc
+gc.enable()
 
 class pyLora:
     IS_RPi = machine.startswith('armv')
     IS_ESP8266 = machine.startswith('ESP8266')
     IS_ESP32 = machine.startswith('ESP32')
+    IS_LORA32 = machine.startswith('LILYGO')
     IS_LOPY = machine.startswith('LoPy')
 
     __SX127X_LIB = None
@@ -27,11 +29,15 @@ class pyLora:
         auto_board_selection = None
 
         if self.IS_RPi:
-            from board_config_rpi import BOARD_RPI
+            from PyLora_SX127x_extensions.board_config_rpi import BOARD_RPI
             auto_board_selection = BOARD_RPI
 
         if self.IS_ESP32:
-            from board_config_esp32 import BOARD_ESP32
+            from PyLora_SX127x_extensions.board_config_esp32 import BOARD_ESP32
+            auto_board_selection = BOARD_ESP32
+        
+        if self.IS_LORA32:
+            from PyLora_SX127x_extensions.board_config_lora32 import BOARD_ESP32
             auto_board_selection = BOARD_ESP32
 
         if self.IS_LOPY:
@@ -42,7 +48,9 @@ class pyLora:
                         bandwidth=LoRa.BW_125KHZ, sf=sf)
             self.lopyLora = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
         else:
-            from LoRa import LoRa
+            # Collect garbage and check the amount of memory allocated and free again
+            gc.collect()
+            from PyLora_SX127x_extensions.LoRa import LoRa
             self.__SX127X_LIB = LoRa(Board_specification=auto_board_selection,
                                      verbose=verbose,
                                      do_calibration=do_calibration,
@@ -84,3 +92,7 @@ class pyLora:
     def setblocking(self, value):
         if self.IS_LOPY: return self.lopyLora.setblocking(value)
         self.blocked_socket = value
+
+    def get_rssi(self):
+        if self.IS_LOPY: return self.lopyLora.stats()[1]
+        return self.__SX127X_LIB.get_rssi_value()
