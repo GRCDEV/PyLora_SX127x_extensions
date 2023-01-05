@@ -14,7 +14,7 @@ DESCRIPTION = 'Easy access to a LoRa channel for ESP32 devices with micropython'
 setup(
     name="PyLora_SX127x_extensions",
     version=VERSION,
-    author="Benjamín Arratia",
+    author="Vicente Rodrigo + Benjamín Arratia",
     author_email="<baarruri@disca.upv.es>",
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
