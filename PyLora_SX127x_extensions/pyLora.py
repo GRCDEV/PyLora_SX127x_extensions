@@ -32,12 +32,8 @@ class pyLora:
             from PyLora_SX127x_extensions.board_config_rpi import BOARD_RPI
             auto_board_selection = BOARD_RPI
 
-        if self.IS_ESP32:
+        if self.IS_ESP32 or self.IS_LORA32:
             from PyLora_SX127x_extensions.board_config_esp32 import BOARD_ESP32
-            auto_board_selection = BOARD_ESP32
-        
-        if self.IS_LORA32:
-            from PyLora_SX127x_extensions.board_config_lora32 import BOARD_ESP32
             auto_board_selection = BOARD_ESP32
 
         if self.IS_LOPY:
