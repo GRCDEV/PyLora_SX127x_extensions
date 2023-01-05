@@ -5,7 +5,7 @@ import spidev
 
 import time
 
-from board_config import BOARD
+from PyLora_SX127x_extensions.board_config import BOARD
 
 GPIO.setmode(GPIO.BCM)
 GPIO.cleanup()

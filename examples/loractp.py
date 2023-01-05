@@ -9,9 +9,10 @@ import hashlib
 import socket
 import os
 
-from board_config import BOARD
-from pyLora import pyLora
+from PyLora_SX127x_extensions.board_config import BOARD
+from PyLora_SX127x_extensions.pyLora import pyLora
 
+# original LoRaCTP working with SX217X
 
 class CTPLoraEndPoint:
     DEBUG = False
