@@ -2,7 +2,6 @@
 import sys
 from PyLora_SX127x_extensions.constants import *
 
-
 ################################################## Some utility functions ##############################################
 
 def set_bit(value, index, new_bit):
@@ -11,7 +10,6 @@ def set_bit(value, index, new_bit):
     if new_bit:
         value |= mask
     return value
-
 
 def getter(register_address):
     """ The getter decorator reads the register content and calls the decorated function to do

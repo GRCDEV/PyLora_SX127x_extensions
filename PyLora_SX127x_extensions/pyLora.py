@@ -91,4 +91,7 @@ class pyLora:
 
     def get_rssi(self):
         if self.IS_LOPY: return self.lopyLora.stats()[1]
-        return self.__SX127X_LIB.get_rssi_value()
+        return self.__SX127X_LIB.get_pkt_rssi_value()
+
+    def sf(self, sf):
+        self.__SX127X_LIB.set_spreading_factor(sf)
