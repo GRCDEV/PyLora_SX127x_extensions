@@ -66,7 +66,11 @@ class LoRa:
                  freq=868,
                  sync_word=0x34,
                  rx_crc=False,
-                 signal_bandwidth=BW.BW125):
+                 signal_bandwidth=BW.BW125,
+                 pa_select=1,
+                 max_power=7,
+                 output_power=14, 
+                 preamble=8):
 
         if Board_specification is None:
             raise NotImplemented("A Board specification is needed for SX127X to work.")
@@ -125,8 +129,8 @@ class LoRa:
         self.get_dio_mapping_1()
 
         self.set_mode(MODE.STDBY)
-        self.set_preamble(8)
-        self.set_pa_config(pa_select=1, output_power=14, max_power=14)
+        self.set_preamble(preamble)
+        self.set_pa_config(pa_select=pa_select, output_power=output_power, max_power=max_power)
 
     # Overridable functions:
 
@@ -196,8 +200,6 @@ class LoRa:
         self.mode = mode
         v = self.spi.transfer(address=REG.LORA.OP_MODE | 0x80, value=mode)
         return v
-
-
 
 
     def write_payload(self, payload):
