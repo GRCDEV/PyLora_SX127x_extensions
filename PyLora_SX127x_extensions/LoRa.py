@@ -51,7 +51,7 @@ def setter(register_address):
 
 class LoRa:
     selected_chip = None
-    spi = None  # init and get the baord's SPI
+    spi = None  # init and get the board's SPI
     mode = None  # the mode is backed up here
     verbose = True
     dio_mapping = [None] * 4  # store the dio mapping here
@@ -305,6 +305,10 @@ class LoRa:
                 Pout=17-(15-OutputPower) if PaSelect = 1 (PA_BOOST pin)
         :return: new register value
         """
+        print("Setting PA config")
+        print("pa_select: ", pa_select)
+        print("max_power: ", max_power)
+        print("output_power: ", output_power)
         loc = locals()
         current = self.get_pa_config()
 
@@ -318,6 +322,7 @@ class LoRa:
             current['output_power'] = output_power
 
         val = (current['pa_select'] << 7) | (current['max_power'] << 4) | (current['output_power'])
+        print("Setting PA config to: ", val)
         v = self.spi.transfer(address=REG.LORA.PA_CONFIG | 0x80, value=val)
         return v
 
@@ -959,3 +964,50 @@ class LoRa:
         s += " pkt_snr_value      %f\n" % self.get_pkt_snr_value()
 
         return s
+
+    # -- 
+    def change_frequency(self, new_freq):
+        """Change the frequency on the fly.
+        
+        :param new_freq: New frequency in MHz
+        :type new_freq: float
+        """
+        # Save the current mode
+        current_mode = self.get_mode()
+
+        # Ensure the device is in standby mode before changing frequency
+        if current_mode != MODE.STDBY:
+            self.set_mode(MODE.STDBY)
+
+        # Set the new frequency
+        self.set_freq(new_freq)
+
+        # Restore the previous mode if it was different
+        if current_mode != MODE.STDBY:
+            self.set_mode(current_mode)
+
+        if self.verbose:
+            sys.stderr.write(f"Frequency changed to {new_freq} MHz\n")
+
+    def change_bw(self, new_bw):
+        """Change the bandwidth on the fly.
+        
+        :param new_bw: New bandwidth (0=7.8kHz, 9=500kHz)
+        :type new_bw: int
+        """
+        # Save the current mode
+        current_mode = self.get_mode()
+
+        # Ensure the device is in standby mode before changing bandwidth
+        if current_mode != MODE.STDBY:
+            self.set_mode(MODE.STDBY)
+
+        # Set the new bandwidth
+        self.set_bw(new_bw)
+
+        # Restore the previous mode if it was different
+        if current_mode != MODE.STDBY:
+            self.set_mode(current_mode)
+
+        if self.verbose:
+            sys.stderr.write(f"Bandwidth changed to {new_bw}\n")
